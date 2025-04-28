@@ -49,7 +49,7 @@ export const hoursSelector = selector<number>({
 
 ---
 
-### #7.2
+### #7.2 ~ #7.3
 **📗react-beautiful-dnd를 사용하여 Drag and Drops 기능 사용하기**
 - npm i react-beautiful-dnd --legacy-peer-deps
 - npm i --save-dev @types/react-beautiful-dnd --legacy-peer-deps
@@ -61,13 +61,13 @@ export default function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId='one'>
-        {()=>(
-          <ul>
+        {(provided)=>(
+          <ul ref={provided.innerRef} {...droppableProps}>
             <Draggable draggableId='first' index={0}>
-              {()=><li>One</li>}
+              {(provided)=><li ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}>One</li>}
             </Draggable>
             <Draggable draggableId='second' index={1}>
-              {()=><li>Two</li>}
+              {(provided)=><li ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}>Two</li>}
             </Draggable>
           </ul>
         )}
@@ -76,6 +76,13 @@ export default function App() {
   )
 }
 ```
-  - `<DragDropContext>`는 onDragEnd 이벤트리스너와 자식요소가 필요하다.
-  - `<Droppable>`은 droppableId prop이 필요하며 자식요소로는 함수를 갖는다.
+  - `<DragDropContext>`는 onDragEnd 이벤트리스너를 필수로 작성한다.
+  - `<Droppable>`은 droppableId를 필수로 작성한다.
+    - 자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
+    - provided.innerRef는 자식요소의 ref속성에 작성해야한다.
+    - provided.droppableProps는 spread 문법으로 작성해야하고, 해당 요소는 drop이 가능한 요소가 된다.
   - `<Draggable>`은 draggableId, index prop이 필요하며 자식요소로는 함수를 갖는다.
+    - 자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
+    - provided.innerRef는 자식요소의 ref속성에 작성해야한다.
+    - provided.draggableProps는 spread 문법으로 작성해야하고, 해당 요소는 drag가 가능한 요소가 된다.
+    - provided.dragHandleProps는 spread 문법으로 작성해야하고, 해당 요소를 클릭해야 drag 무빙이 가능하다.

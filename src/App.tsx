@@ -6,13 +6,13 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId='one'>
-        {()=>(
-          <ul>
+        {(provided)=>(
+          <ul ref={provided.innerRef} {...provided.droppableProps}>
             <Draggable draggableId='first' index={0}>
-              {()=><li>One</li>}
+              {(provided)=><li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>One</li>}
             </Draggable>
             <Draggable draggableId='second' index={1}>
-              {()=><li>Two</li>}
+              {(provided)=><li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>Two</li>}
             </Draggable>
           </ul>
         )}
@@ -25,7 +25,14 @@ export default App;
 
 
 /*
-<DragDropContext>는 onDragEnd 이벤트리스너와 자식요소를 필수로 갖는다.
-<Droppable>은 droppableId를 prop으로 갖고, 자식요소를 함수로 갖는다.
-<Draggable>은 draggableId와 index를 prop으로 갖고, 자식요소를 함수로 갖는다.
+<DragDropContext> = onDragEnd 이벤트리스너를 필수로 작성.  #7.2
+<Droppable> = droppableId 필수로 작성.  #7.2
+              자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
+              provided.innerRef는 자식요소의 ref속성에 작성해야한다.
+              provided.droppableProps는 spread 문법으로 작성해야하고, 해당 요소는 drop이 가능한 요소가 된다.  #7.3
+<Draggable> = draggableId, index 필수로 작성.  #7.2
+              자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
+              provided.innerRef는 자식요소의 ref속성에 작성해야한다.
+              provided.draggableProps는 spread 문법으로 작성해야하고, 해당 요소는 drag가 가능한 요소가 된다.
+              provided.dragHandleProps는 spread 문법으로 작성해야하고, 해당 요소를 클릭해야 drag 무빙이 가능하다.  #7.3
 */
