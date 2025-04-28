@@ -11,6 +11,8 @@
 - recoil : npm i recoil
 - react-hook-form : npm i react-hook-form
 - react-icons : npm i react-icons --save
+- react-beautiful-dnd : npm i react-beautiful-dnd --legacy-peer-deps, npm i --save-dev @types/react-beautiful-dnd --legacy-peer-deps
+
 
 🚫 미사용 라이브러리
 
@@ -46,3 +48,34 @@ export const hoursSelector = selector<number>({
 ```
 
 ---
+
+### #7.2
+**📗react-beautiful-dnd를 사용하여 Drag and Drops 기능 사용하기**
+- npm i react-beautiful-dnd --legacy-peer-deps
+- npm i --save-dev @types/react-beautiful-dnd --legacy-peer-deps
+- App.jsx에 react-beautiful-dnd 세팅
+```jsx
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+export default function App() {
+  function onDragEnd() {}
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId='one'>
+        {()=>(
+          <ul>
+            <Draggable draggableId='first' index={0}>
+              {()=><li>One</li>}
+            </Draggable>
+            <Draggable draggableId='second' index={1}>
+              {()=><li>Two</li>}
+            </Draggable>
+          </ul>
+        )}
+      </Droppable>
+    </DragDropContext>
+  )
+}
+```
+  - `<DragDropContext>`는 onDragEnd 이벤트리스너와 자식요소가 필요하다.
+  - `<Droppable>`은 droppableId prop이 필요하며 자식요소로는 함수를 갖는다.
+  - `<Draggable>`은 draggableId, index prop이 필요하며 자식요소로는 함수를 갖는다.
