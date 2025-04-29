@@ -31,9 +31,18 @@ const Card = styled.div`
 `;
 function App() {
   const [items,setItems] = useRecoilState(itemState)
-  const onDragEnd = (args:DropResult) => 
-    // console.log(args)
-    console.log(args.destination, args.source)
+  const onDragEnd = (args:DropResult) => {
+    const {destination,source,draggableId} = args;
+    // onDragEnd 이벤트리스너의 args안에는 draggable요소의 id, destination, source 등의 정보가 들어있다.  #7.6
+    if(!destination) return;
+    // draggable요소가 제자리에서 drag되면 destination이 null을 반환한다.  #7.6
+    setItems((items)=>{
+      const copyItems = [...items]
+      copyItems.splice(source.index,1)
+      copyItems.splice(destination.index,0,draggableId)
+      return copyItems
+    })
+  }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
@@ -42,7 +51,7 @@ function App() {
             {(provided)=>(
               <Board ref={provided.innerRef}{...provided.droppableProps}>
                 {items.map((item,index)=>(
-                  <Draggable draggableId={item} index={index} key={index}>
+                  <Draggable draggableId={item} index={index} key={item+index}>
                     {(provided)=>(
                       <Card ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps}>
                         {item}
