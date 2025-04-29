@@ -1,7 +1,8 @@
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { itemState } from './atoms';
+import DraggableCard from './components/DraggableCard';
 
 const Wrapper = styled.div`
     display: flex;
@@ -23,25 +24,23 @@ const Board = styled.div`
   border-radius: 5px;
   min-height: 200px;
 `;
-const Card = styled.div`
-  border-radius: 5px;
-  margin-bottom: 5px;
-  padding: 10px 10px;
-  background-color: ${(props) => props.theme.cardColor};
-`;
+
 function App() {
   const [items,setItems] = useRecoilState(itemState)
+
   const onDragEnd = (args:DropResult) => {
-    const {destination,source,draggableId} = args;
+    const { destination,source,draggableId } = args;
     // onDragEnd 이벤트리스너의 args안에는 draggable요소의 id, destination, source 등의 정보가 들어있다.  #7.6
+
     if(!destination) return;
     // draggable요소가 제자리에서 drag되면 destination이 null을 반환한다.  #7.6
+
     setItems((items)=>{
       const copyItems = [...items]
       copyItems.splice(source.index,1)
-      copyItems.splice(destination.index,0,draggableId)
-      return copyItems
-    })
+      copyItems.splice(destination?.index,0,draggableId)
+      return copyItems;
+    }) 
   }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -51,13 +50,7 @@ function App() {
             {(provided)=>(
               <Board ref={provided.innerRef}{...provided.droppableProps}>
                 {items.map((item,index)=>(
-                  <Draggable draggableId={item} index={index} key={item+index}>
-                    {(provided)=>(
-                      <Card ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps}>
-                        {item}
-                      </Card>
-                    )}
-                  </Draggable>
+                  <DraggableCard item={item} index={index} key={item+index}/>
                 ))}
                 {provided.placeholder}
               </Board>

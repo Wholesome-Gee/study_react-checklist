@@ -94,3 +94,7 @@ export const hoursSelector = selector<number>({
     - provided.innerRef는 자식요소의 ref속성에 작성해야한다.  (#7.3)
     - provided.draggableProps는 spread 문법으로 작성해야하고, 해당 요소는 drag가 가능한 요소가 된다.  (#7.3)
     - provided.dragHandleProps는 spread 문법으로 작성해야하고, 해당 요소를 클릭해야 drag 무빙이 가능하다.  (#7.3)
+
+--- 
+### #7.7
+**📗React.memo(component)를 사용하여 component의 불필요한 재렌더링을 막기**
