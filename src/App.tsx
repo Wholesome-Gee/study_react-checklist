@@ -1,5 +1,7 @@
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { itemState } from './atoms';
 
 const Wrapper = styled.div`
     display: flex;
@@ -27,23 +29,23 @@ const Card = styled.div`
   padding: 10px 10px;
   background-color: ${(props) => props.theme.cardColor};
 `;
-const toDos = ["a", "b", "c", "d", "e", "f"];
 function App() {
-  function onDragEnd() {
-
-  }
+  const [items,setItems] = useRecoilState(itemState)
+  const onDragEnd = (args:DropResult) => 
+    // console.log(args)
+    console.log(args.destination, args.source)
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <Boards>
-          <Droppable droppableId='one' isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={true}>
+          <Droppable droppableId='one' isDropDisabled={false}>
             {(provided)=>(
               <Board ref={provided.innerRef}{...provided.droppableProps}>
-                {toDos.map((toDo,index)=>(
-                  <Draggable draggableId={toDo} index={index} key={index}>
+                {items.map((item,index)=>(
+                  <Draggable draggableId={item} index={index} key={index}>
                     {(provided)=>(
                       <Card ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps}>
-                        {toDo}
+                        {item}
                       </Card>
                     )}
                   </Draggable>
@@ -57,12 +59,12 @@ function App() {
     </DragDropContext>
   )
 }
-
 export default App;
 
 
 /*
 <DragDropContext> = onDragEnd 이벤트리스너를 필수로 작성.  #7.2
+                    onDragEnd 이벤트리스너는 DropResult 타입의 args를 parameter로 갖고있으며, args에는 draggable요소의 시작지점, 도착지점 등의 정보가 나와있다. (console.log(args))  #7.5
 <Droppable> = droppableId 필수로 작성.  #7.2
               자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
               provided.innerRef는 자식요소의 ref속성에 작성해야한다.
