@@ -1,22 +1,59 @@
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+    display: flex;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+`
+const Boards = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+`;
+const Board = styled.div`
+  padding: 30px 10px 20px 10px;
+  background-color: ${(props) => props.theme.boardColor};
+  border-radius: 5px;
+  min-height: 200px;
+`;
+const Card = styled.div`
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 10px 10px;
+  background-color: ${(props) => props.theme.cardColor};
+`;
+const toDos = ["a", "b", "c", "d", "e", "f"];
 function App() {
   function onDragEnd() {
 
   }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId='one'>
-        {(provided)=>(
-          <ul ref={provided.innerRef} {...provided.droppableProps}>
-            <Draggable draggableId='first' index={0}>
-              {(provided)=><li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>One</li>}
-            </Draggable>
-            <Draggable draggableId='second' index={1}>
-              {(provided)=><li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>Two</li>}
-            </Draggable>
-          </ul>
-        )}
-      </Droppable>
+      <Wrapper>
+        <Boards>
+          <Droppable droppableId='one' isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={true}>
+            {(provided)=>(
+              <Board ref={provided.innerRef}{...provided.droppableProps}>
+                {toDos.map((toDo,index)=>(
+                  <Draggable draggableId={toDo} index={index} key={index}>
+                    {(provided)=>(
+                      <Card ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps}>
+                        {toDo}
+                      </Card>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </Board>
+            )}
+          </Droppable>
+        </Boards>
+      </Wrapper>
     </DragDropContext>
   )
 }
@@ -30,6 +67,7 @@ export default App;
               자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
               provided.innerRef는 자식요소의 ref속성에 작성해야한다.
               provided.droppableProps는 spread 문법으로 작성해야하고, 해당 요소는 drop이 가능한 요소가 된다.  #7.3
+              provided.placeholder는 draggable요소의 drag에 따른 droppable요소의 사이즈 변화를 막아준다.  #7.4
 <Draggable> = draggableId, index 필수로 작성.  #7.2
               자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
               provided.innerRef는 자식요소의 ref속성에 작성해야한다.

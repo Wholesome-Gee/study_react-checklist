@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { RecoilRoot } from "recoil";
+import { lightTheme } from "./theme";
 
 const CreateGlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
@@ -33,6 +34,8 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
   font-family: "Nanum Gothic", sans-serif;
+  color: black;
+  background-color:${(props)=>props.theme.backgroundColor}
 }
 ol, ul {
 	list-style: none;
@@ -57,7 +60,9 @@ table {
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <RecoilRoot>
-    <CreateGlobalStyle />
-    <App />
+    <ThemeProvider theme={lightTheme}>
+      <CreateGlobalStyle />
+      <App />
+    </ThemeProvider>
   </RecoilRoot>
 );

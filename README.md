@@ -49,38 +49,40 @@ export const hoursSelector = selector<number>({
 
 ---
 
-### #7.2 ~ #7.3
+### #7.2 ~ #7.4
 **📗react-beautiful-dnd를 사용하여 Drag and Drops 기능 사용하기**
 - npm i react-beautiful-dnd --legacy-peer-deps
 - npm i --save-dev @types/react-beautiful-dnd --legacy-peer-deps
 - App.jsx에 react-beautiful-dnd 세팅
-```jsx
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-export default function App() {
-  function onDragEnd() {}
-  return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId='one'>
-        {(provided)=>(
-          <ul ref={provided.innerRef} {...droppableProps}>
-            <Draggable draggableId='first' index={0}>
-              {(provided)=><li ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}>One</li>}
-            </Draggable>
-            <Draggable draggableId='second' index={1}>
-              {(provided)=><li ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}>Two</li>}
-            </Draggable>
-          </ul>
-        )}
-      </Droppable>
-    </DragDropContext>
-  )
-}
-```
+  ```jsx
+  import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+  export default function App() {
+    function onDragEnd() {}
+    return (
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId='one'>
+          {(provided)=>(
+            <ul ref={provided.innerRef} {...droppableProps}>
+              <Draggable draggableId='first' index={0}>
+                {(provided)=><li ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}>One</li>}
+              </Draggable>
+              <Draggable draggableId='second' index={1}>
+                {(provided)=><li ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}>Two</li>}
+              </Draggable>
+            </ul>
+            {provided.placeholder}
+          )}
+        </Droppable>
+      </DragDropContext>
+    )
+  }
+  ```
   - `<DragDropContext>`는 onDragEnd 이벤트리스너를 필수로 작성한다.
   - `<Droppable>`은 droppableId를 필수로 작성한다.
     - 자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
     - provided.innerRef는 자식요소의 ref속성에 작성해야한다.
     - provided.droppableProps는 spread 문법으로 작성해야하고, 해당 요소는 drop이 가능한 요소가 된다.
+    - provided.placeholder는 draggable요소의 drag에 따라 변화하는 droppable요소의 사이즈 변화를 막아준다.
   - `<Draggable>`은 draggableId, index prop이 필요하며 자식요소로는 함수를 갖는다.
     - 자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
     - provided.innerRef는 자식요소의 ref속성에 작성해야한다.
