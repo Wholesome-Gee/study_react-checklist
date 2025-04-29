@@ -1,12 +1,12 @@
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { itemState } from './atoms';
-import DraggableCard from './components/DraggableCard';
+import { categoriesState } from './atoms';
+import DroppableBoard from './components/DroppableBoard';
 
 const Wrapper = styled.div`
     display: flex;
-    max-width: 480px;
+    max-width: 680px;
     width: 100%;
     margin: 0 auto;
     justify-content: center;
@@ -17,16 +17,12 @@ const Boards = styled.div`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(3, 1fr);
-`;
-const Board = styled.div`
-  padding: 30px 10px 20px 10px;
-  background-color: ${(props) => props.theme.boardColor};
-  border-radius: 5px;
-  min-height: 200px;
+  gap: 10px;
 `;
 
+
 function App() {
-  const [items,setItems] = useRecoilState(itemState)
+  const [categories,setCategories] = useRecoilState(categoriesState)
 
   const onDragEnd = (args:DropResult) => {
     const { destination,source,draggableId } = args;
@@ -35,27 +31,21 @@ function App() {
     if(!destination) return;
     // draggable요소가 제자리에서 drag되면 destination이 null을 반환한다.  #7.6
 
-    setItems((items)=>{
-      const copyItems = [...items]
-      copyItems.splice(source.index,1)
-      copyItems.splice(destination?.index,0,draggableId)
-      return copyItems;
-    }) 
+    // setItems((items)=>{
+    //   const copyItems = [...items]
+    //   copyItems.splice(source.index,1)
+    //   copyItems.splice(destination?.index,0,draggableId)
+    //   return copyItems;
+    // }) 
   }
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <Boards>
-          <Droppable droppableId='one' isDropDisabled={false}>
-            {(provided)=>(
-              <Board ref={provided.innerRef}{...provided.droppableProps}>
-                {items.map((item,index)=>(
-                  <DraggableCard item={item} index={index} key={item+index}/>
-                ))}
-                {provided.placeholder}
-              </Board>
-            )}
-          </Droppable>
+          {Object.keys(categories).map((category,index)=>
+            <DroppableBoard key={category+index} boardId={category+index} items={ categories[category] } />
+          )}
         </Boards>
       </Wrapper>
     </DragDropContext>
