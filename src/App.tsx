@@ -7,16 +7,17 @@ import DroppableBoard from './components/DroppableBoard';
 const Wrapper = styled.div`
     display: flex;
     max-width: 680px;
-    width: 100%;
+    width: 100vw;
     margin: 0 auto;
     justify-content: center;
     align-items: center;
     height: 100vh;
 `
 const Boards = styled.div`
-  display: grid;
+  display: flex;
+  justify-contents: center;
+  align-items: flex-start;
   width: 100%;
-  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 `;
 
@@ -25,18 +26,27 @@ function App() {
   const [categories,setCategories] = useRecoilState(categoriesState)
 
   const onDragEnd = (args:DropResult) => {
+    console.log("onDragEnd args➡️ ",args)
     const { destination,source,draggableId } = args;
     // onDragEnd 이벤트리스너의 args안에는 draggable요소의 id, destination, source 등의 정보가 들어있다.  #7.6
 
     if(!destination) return;
     // draggable요소가 제자리에서 drag되면 destination이 null을 반환한다.  #7.6
 
-    // setItems((items)=>{
-    //   const copyItems = [...items]
-    //   copyItems.splice(source.index,1)
-    //   copyItems.splice(destination?.index,0,draggableId)
-    //   return copyItems;
-    // }) 
+    if(destination.droppableId === source.droppableId){
+    // 같은 droppable요소 안에서 drag and drop이 발생했을때
+      setCategories((categories)=>{
+        const copyCategory = [...categories[destination.droppableId]] // categories[destination.droppableId] => categories['items'||'carrier'||'bag'] 
+        console.log("copyCategory➡️ ", copyCategory)
+        copyCategory.splice(source.index,1)  // source는 drag전의 요소 정보
+        copyCategory.splice(destination.index,0,draggableId)  // destination은 drop후의 요소 정보
+        console.log("splice copyCategory➡️ ", copyCategory)
+        return {
+          ...categories,  // => { items:[...], carrier:[...], bag:[...]}  // {{ ... }}일때, 안쪽의 {}는 자동으로 벗겨진다.
+          [destination.droppableId]:copyCategory  // => 'items'||'carrier'||'bag' : copyCategory 
+        }
+      })
+    }
   }
 
   return (
@@ -44,7 +54,7 @@ function App() {
       <Wrapper>
         <Boards>
           {Object.keys(categories).map((category,index)=>
-            <DroppableBoard key={category+index} boardId={category+index} items={ categories[category] } />
+            <DroppableBoard key={category+index} boardId={category} items={ categories[category] } />
           )}
         </Boards>
       </Wrapper>
