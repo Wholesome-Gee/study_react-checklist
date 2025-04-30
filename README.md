@@ -101,3 +101,11 @@ export const hoursSelector = selector<number>({
 ### #7.7
 
 **📗React.memo(component)를 사용하여 component의 불필요한 재렌더링을 막기**
+
+---
+
+### #7.13
+
+**📗useRef()를 사용하여 특정 html요소에 대한 접근과 불필요한 재렌더링을 막기**
+
+---

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import DraggableCard from "./DraggableCard";
 import { Droppable } from "react-beautiful-dnd";
+import { useRef } from "react";
 
 const Wrapper = styled.div`
   width: 300px;
@@ -41,9 +42,22 @@ interface IDroppableBoard {
   boardId:string
 }
 function DroppableBoard({items,boardId}:IDroppableBoard) {
+  const inputRef = useRef<HTMLInputElement>(null)  // useRef()는 특정 html 요소의 불필요한 재렌더링을 막아줌과 동시에 html 요소에 접근이 가능하다. 접근할 input에 ref={inputRef}  #7.13
+  function onClick() {
+    inputRef.current?.focus();  // inputRef.current에는 html요소에 대한 정보가 들어있다.  #7.13
+    setTimeout(() => {
+      inputRef.current?.blur();
+    }, 5000);
+  }
+  /*
+  
+
+  */
   return(
     <Wrapper>
       <Title>{boardId}</Title>
+      <input ref={inputRef} placeholder="grab me" />
+      <button onClick={onClick}>click me</button>
       <Droppable droppableId={boardId} isDropDisabled={false}>
         {(provided,snapshot)=>(
           <Area draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} isDraggingOver={snapshot.isDraggingOver} ref={provided.innerRef}{...provided.droppableProps}>
