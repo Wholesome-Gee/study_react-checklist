@@ -85,10 +85,4 @@ export default App;
 /*
 <DragDropContext> = onDragEnd 이벤트리스너를 필수로 작성.  #7.2
                     onDragEnd 이벤트리스너는 DropResult 타입의 args를 parameter로 갖고있으며, args에는 draggable요소의 시작지점, 도착지점 등의 정보가 나와있다. (console.log(args))  #7.5
-
-<Draggable> = draggableId, index 필수로 작성.  #7.2
-              자식요소는 함수안에 작성하고, 함수는 'provided' parameter를 갖고있다.
-              provided.innerRef는 자식요소의 ref속성에 작성해야한다.
-              provided.draggableProps는 spread 문법으로 작성해야하고, 해당 요소는 drag가 가능한 요소가 된다.
-              provided.dragHandleProps는 spread 문법으로 작성해야하고, 해당 요소를 클릭해야 drag 무빙이 가능하다.  #7.3
 */
