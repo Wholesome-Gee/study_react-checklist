@@ -1,10 +1,10 @@
 import { atom } from "recoil";
 
-interface ICategories {
+interface IBoard {
   [key:string]:string[]
 }
 
-export const categoriesState = atom<ICategories>({
+export const boardState = atom<IBoard>({
   key:"items",
   default:{
     item:["드라이기","화장품","고데기","지갑","과자"],

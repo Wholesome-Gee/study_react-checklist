@@ -1,7 +1,7 @@
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { categoriesState } from './atoms';
+import { boardState } from './atoms';
 import DroppableBoard from './components/DroppableBoard';
 
 const Wrapper = styled.div`
@@ -23,7 +23,7 @@ const Boards = styled.div`
 
 
 function App() {
-  const [categories,setCategories] = useRecoilState(categoriesState)
+  const [boards,setBoards] = useRecoilState(boardState)
 
   const onDragEnd = (args:DropResult) => {
     console.log("onDragEnd args➡️ ",args)
@@ -35,17 +35,35 @@ function App() {
 
     if(destination.droppableId === source.droppableId){
     // 같은 droppable요소 안에서 drag and drop이 발생했을때
-      setCategories((categories)=>{
-        const copyCategory = [...categories[destination.droppableId]] // categories[destination.droppableId] => categories['items'||'carrier'||'bag'] 
-        console.log("copyCategory➡️ ", copyCategory)
-        copyCategory.splice(source.index,1)  // source는 drag전의 요소 정보
-        copyCategory.splice(destination.index,0,draggableId)  // destination은 drop후의 요소 정보
-        console.log("splice copyCategory➡️ ", copyCategory)
+      setBoards((boards)=>{
+        const copyBoards = [...boards[destination.droppableId]] // boards[destination.droppableId] => boards['items'||'carrier'||'bag'] 
+        console.log("copyBoards➡️ ", copyBoards)
+        copyBoards.splice(source.index,1)  // source는 drag전의 요소 정보
+        copyBoards.splice(destination.index,0,draggableId)  // destination은 drop후의 요소 정보
+        console.log("splice copyBoards➡️ ", copyBoards)
         return {
-          ...categories,  // => { items:[...], carrier:[...], bag:[...]}  // {{ ... }}일때, 안쪽의 {}는 자동으로 벗겨진다.
-          [destination.droppableId]:copyCategory  // => 'items'||'carrier'||'bag' : copyCategory 
+          ...boards,  // => { items:[...], carrier:[...], bag:[...]}  // {{ ... }}일때, 안쪽의 {}는 자동으로 벗겨진다.
+          [destination.droppableId]:copyBoards  // => 'items'||'carrier'||'bag' : copyCategory 
         }
       })
+    }
+    if(destination.droppableId !== source.droppableId){
+    // 다른 droppable요소 안에서 drag and drop이 발생했을때
+    setBoards((boards)=>{
+      const sourceBoard = [...boards[source.droppableId]]  // boards[source.droppableId] => boards['items'||'carrier'||'bag'] 
+      const destinationBoard = [...boards[destination.droppableId]]  // boards[destination.droppableId] => boards['items'||'carrier'||'bag'] 
+      console.log('sourceBoard➡️ ',sourceBoard)
+      console.log('destinationBoard➡️ ',destinationBoard)
+      sourceBoard.splice(source.index,1)  // source는 drag전의 요소 정보
+      destinationBoard.splice(destination.index,0,draggableId)  // destination은 drop후의 요소 정보
+      console.log('splice sourceBoard➡️ ',sourceBoard)
+      console.log('splice destinationBoard➡️ ',destinationBoard)
+      return {
+        ...boards,  // => { items:[...], carrier:[...], bag:[...]}  // {{ ... }}일때, 안쪽의 {}는 자동으로 벗겨진다.
+        [source.droppableId]: sourceBoard,  // => 'items'||'carrier'||'bag' : sourceBoard
+        [destination.droppableId]: destinationBoard  // => 'items'||'carrier'||'bag' : destinationBoard
+      }
+    })
     }
   }
 
@@ -53,8 +71,8 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <Boards>
-          {Object.keys(categories).map((category,index)=>
-            <DroppableBoard key={category+index} boardId={category} items={ categories[category] } />
+          {Object.keys(boards).map((category,index)=>
+            <DroppableBoard key={category+index} boardId={category} items={ boards[category] } />
           )}
         </Boards>
       </Wrapper>
