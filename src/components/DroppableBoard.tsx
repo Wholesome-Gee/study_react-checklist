@@ -8,6 +8,8 @@ const Wrapper = styled.div`
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 5px;
   min-height: 300px;
+  display:flex;
+  flex-direction: column;
 `;
 const Title = styled.h2`
   text-align: center;
@@ -15,6 +17,15 @@ const Title = styled.h2`
   margin-bottom: 10px;
   font-size: 18px
 `
+const Area = styled.div<IArea>`
+flex-grow: 1;
+background-color: ${props=> props.isDraggingOver ? 'red' : props.draggingFromThisWith ? 'blue' : 'transparent'};
+`
+
+interface IArea {
+  isDraggingOver: boolean,
+  draggingFromThisWith: boolean
+}
 
 interface IDroppableBoard {
   items:string[],
@@ -25,13 +36,13 @@ function DroppableBoard({items,boardId}:IDroppableBoard) {
     <Wrapper>
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId} isDropDisabled={false}>
-        {(provided)=>(
-          <div ref={provided.innerRef}{...provided.droppableProps}>
+        {(provided,snapshot)=>(
+          <Area draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} isDraggingOver={snapshot.isDraggingOver} ref={provided.innerRef}{...provided.droppableProps}>
             {items.map((item,index)=>(
               <DraggableCard item={item} index={index} key={item+index}/>
             ))}
             {provided.placeholder}
-          </div>              
+          </Area>              
         )}
       </Droppable>
     </Wrapper>
@@ -39,3 +50,14 @@ function DroppableBoard({items,boardId}:IDroppableBoard) {
 }
 
 export default DroppableBoard
+
+
+/*
+<Droppable> = droppableId 필수로 작성.  #7.2
+              자식요소는 함수안에 작성하고, 함수는 'provided','snapshot' parameter를 갖고있다. (snapshot은 #7.11)
+              provided.innerRef는 자식요소의 ref속성에 작성해야한다.
+              provided.droppableProps는 spread 문법으로 작성해야하고, 해당 요소는 drop이 가능한 요소가 된다.  #7.3
+              provided.placeholder는 draggable요소의 drag에 따른 droppable요소의 사이즈 변화를 막아준다.  #7.4
+              snapshot.draggingFromThisWith는 draggable요소가 기존의 droppable요소를 벗어나면 draggableId를 반환한다.  #7.11
+              snapshot.isDraggingOver는 draggable요소가 특정 droppable요소 위에서 드래깅 되고 있는지 여부  #7.11
+*/
