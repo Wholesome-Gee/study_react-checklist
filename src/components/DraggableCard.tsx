@@ -11,15 +11,16 @@ const Card = styled.div<{isDragging:boolean}>`
 `;
 
 interface ICard {
-  item:string,
+  itemId:number,
+  itemName:string,
   index:number,
 }
-function DraggableCard ({item,index}:ICard) {
+function DraggableCard ({itemId,itemName,index}:ICard) {
   return (
-    <Draggable draggableId={item} index={index}>
+    <Draggable draggableId={itemId+''} index={index}>
       {(provided,snapshot)=>(
         <Card isDragging={snapshot.isDragging} ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps}>
-          {item}
+          {itemName}
         </Card>
       )}
     </Draggable>

@@ -2,6 +2,8 @@ import styled from "styled-components";
 import DraggableCard from "./DraggableCard";
 import { Droppable } from "react-beautiful-dnd";
 import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { IItem } from "../atoms";
 
 const Wrapper = styled.div`
   width: 300px;
@@ -17,7 +19,13 @@ const Title = styled.h2`
   text-align: center;
   font-weight: 600;
   margin-bottom: 10px;
-  font-size: 18px
+  font-size: 18px;
+`
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%
+  }
 `
 const Area = styled.div<IArea>`
 padding: 20px;
@@ -32,37 +40,46 @@ background-color: ${
 };
 `
 
+interface IDroppableBoard {
+  items:IItem[],
+  boardId:string
+}
+interface IForm {
+  item: string
+}
 interface IArea {
   isDraggingOver: boolean,
   draggingFromThisWith: boolean
 }
 
-interface IDroppableBoard {
-  items:string[],
-  boardId:string
-}
 function DroppableBoard({items,boardId}:IDroppableBoard) {
+  const { register, setValue, handleSubmit } = useForm<IForm>()
   const inputRef = useRef<HTMLInputElement>(null)  // useRef()는 특정 html 요소의 불필요한 재렌더링을 막아줌과 동시에 html 요소에 접근이 가능하다. 접근할 input에 ref={inputRef}  #7.13
-  function onClick() {
-    inputRef.current?.focus();  // inputRef.current에는 html요소에 대한 정보가 들어있다.  #7.13
-    setTimeout(() => {
-      inputRef.current?.blur();
-    }, 5000);
-  }
-  /*
-  
 
-  */
+  function onValid(data:IForm) {
+    const { item } = data
+    setValue('item',"")
+  }
+  // function onClick() {
+  //   inputRef.current?.focus();  // inputRef.current에는 html요소에 대한 정보가 들어있다.  #7.13
+  //   setTimeout(() => {
+  //     inputRef.current?.blur();
+  //   }, 5000);
+  // }
+
   return(
     <Wrapper>
       <Title>{boardId}</Title>
-      <input ref={inputRef} placeholder="grab me" />
-      <button onClick={onClick}>click me</button>
+      <Form onSubmit={handleSubmit(onValid)}>
+        <input {...register('item',{required:"물품을 입력하세요."})} type="text" placeholder={`${boardId}에 추가할 물품을 입력하세요.`}/>
+      </Form>
+      {/* <input ref={inputRef} placeholder="grab me" />
+      <button onClick={onClick}>click me</button> */}
       <Droppable droppableId={boardId} isDropDisabled={false}>
         {(provided,snapshot)=>(
           <Area draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} isDraggingOver={snapshot.isDraggingOver} ref={provided.innerRef}{...provided.droppableProps}>
             {items.map((item,index)=>(
-              <DraggableCard item={item} index={index} key={item+index}/>
+              <DraggableCard itemId={item.id} itemName={item.name} index={index} key={item.id}/>
             ))}
             {provided.placeholder}
           </Area>              

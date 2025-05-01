@@ -71,8 +71,8 @@ function App() {
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <Boards>
-          {Object.keys(boards).map((category,index)=>
-            <DroppableBoard key={category+index} boardId={category} items={ boards[category] } />
+          {Object.keys(boards).map((boardName,index)=>
+            <DroppableBoard key={boardName} boardId={boardName} items={ boards[boardName] } />
           )}
         </Boards>
       </Wrapper>

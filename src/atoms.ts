@@ -1,15 +1,20 @@
 import { atom } from "recoil";
 
+export interface IItem {
+  id: number;
+  name: string;
+  // item은 id와 name으로 구성된 객체다.
+} 
 interface IBoard {
-  [key:string]:string[]
+  [key:string]:IItem[]
+  // board는 string key와 item배열로 구성된 객체다.
 }
-
 export const boardState = atom<IBoard>({
   key:"items",
   default:{
-    item:["드라이기","화장품","고데기","지갑","과자"],
-    carrier:["옷","수건","상비약","책","충전기"],
-    bag:["이어폰","핸드폰","보조배터리"]
+    item:[],
+    carrier:[],
+    bag:[]
   }
 })
 /*
