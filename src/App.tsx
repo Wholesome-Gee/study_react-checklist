@@ -21,9 +21,9 @@ const Title = styled.h1`
   transform: translateY(-50px)
 `
 const BoardContainer = styled.div`
-  display: flex;
-  justify-contents: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  justify-content: center;
   width: 100%;
   gap: 10px;
 `;

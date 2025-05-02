@@ -1,21 +1,45 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd"
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { boardState } from "../atoms";
 
 const Card = styled.div<{isDragging:boolean}>`
-  border-radius: 5px;
-  margin-bottom: 5px;
   padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: ${props=>props.isDragging ? "0px 2px 5px rgba(0,0,0,0.2)" : "none"};
   background-color: ${(props) => props.isDragging ? "#A8D8B9" : props.theme.cardColor};
-  box-shadow: ${props=>props.isDragging ? "0px 2px 5px rgba(0,0,0,0.2)" : "none"}
+  button {
+    padding: 2px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
 `;
 
 interface ICard {
   itemId:number,
   itemName:string,
   index:number,
+  includeBoard:string
 }
-function DraggableCard ({itemId,itemName,index}:ICard) {
+function DraggableCard ({itemId,itemName,index,includeBoard}:ICard) {
+  const setBoards = useSetRecoilState(boardState)
+  function deleteItem(){
+    setBoards((boards)=>{
+      const copyBoard = [...boards[includeBoard]]
+      copyBoard.splice(index,1)
+      return {
+        ...boards,
+        [includeBoard]:copyBoard
+      }
+    })
+  }
   return (
     <Draggable draggableId={itemId+''} index={index}>
       {(provided,snapshot)=>(
@@ -23,7 +47,8 @@ function DraggableCard ({itemId,itemName,index}:ICard) {
           ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps} 
           isDragging={snapshot.isDragging} 
         >
-          {itemName}
+          <span>{itemName}</span>
+          <button onClick={deleteItem}>❌</button>
         </Card>
       )}
     </Draggable>

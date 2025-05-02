@@ -118,7 +118,7 @@ function DroppableBoard({items,boardId}:IDroppableBoard) {
             isDraggingOver={snapshot.isDraggingOver}
           >
             {items.map((item,index)=>(
-              <DraggableCard itemId={item.id} itemName={item.name} index={index} key={item.id}/>
+              <DraggableCard itemId={item.id} itemName={item.name} index={index} includeBoard={boardId} key={item.id}/>
             ))}
             {provided.placeholder}
           </Area>              

@@ -15,9 +15,9 @@ interface IBoard {
 export const boardState = atom<IBoard>({
   key:"items",
   default:{
-    핸드백:[],
+    캐리어:[],
     백팩:[],
-    캐리어:[]
+    소지품:[]
   },
   effects_UNSTABLE: [persistAtom],  // recoil-persist 세팅작업 2
 })
