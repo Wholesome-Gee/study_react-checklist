@@ -33,7 +33,7 @@ function App() {
   const [boards,setBoards] = useRecoilState(boardState)
 
   function onDragEnd(result:DropResult) {
-    console.log("onDragEnd result➡️ ",result)
+    // console.log("onDragEnd result➡️ ",result)
     const { destination,source } = result;
     if(!destination) return;
     // onDragEnd 이벤트리스너는 result를 parameter로 갖고있으며, result는 DropResult타입이다.  #7.5
@@ -61,8 +61,8 @@ function App() {
         const sourceItem = sourceBoard[source.index]  // {key1:value1}
         sourceBoard.splice(source.index,1)  
         destinationBoard.splice(destination.index,0,sourceItem)
-        console.log('splice sourceBoard➡️ ',sourceBoard)
-        console.log('splice destinationBoard➡️ ',destinationBoard)
+        // console.log('splice sourceBoard➡️ ',sourceBoard)
+        // console.log('splice destinationBoard➡️ ',destinationBoard)
         return {
           ...boards,  
           [source.droppableId]: sourceBoard, 

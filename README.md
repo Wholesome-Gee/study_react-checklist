@@ -13,7 +13,7 @@
 - react-icons : npm i react-icons --save
 - react-beautiful-dnd : npm i react-beautiful-dnd --legacy-peer-deps, npm i --save-dev @types/react-beautiful-dnd --legacy-peer-deps
 - react v18 다운그레이드 : npm i react@18 react-dom@18
-
+- gh-pages : npm i gh-pages
 
 🚫 미사용 라이브러리
 
