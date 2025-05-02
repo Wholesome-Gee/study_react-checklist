@@ -1,19 +1,26 @@
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { useRecoilState } from 'recoil';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';  // npm i react-beautiful-dnd --legacy-peer-deps, npm i --save-dev @types/react-beautiful-dnd --legacy-peer-deps
+import { useRecoilState } from 'recoil'; 
 import styled from 'styled-components';
 import { boardState } from './atoms';
 import DroppableBoard from './components/DroppableBoard';
 
-const Wrapper = styled.div`
-    display: flex;
-    max-width: 680px;
-    width: 100vw;
-    margin: 0 auto;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+const Container = styled.div`
+  width: 100vw;
+  max-width: 680px;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
-const Boards = styled.div`
+const Title = styled.h1`
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  transform: translateY(-50px)
+`
+const BoardContainer = styled.div`
   display: flex;
   justify-contents: center;
   align-items: flex-start;
@@ -25,59 +32,56 @@ const Boards = styled.div`
 function App() {
   const [boards,setBoards] = useRecoilState(boardState)
 
-  const onDragEnd = (args:DropResult) => {
-    console.log("onDragEnd args➡️ ",args)
-    const { destination,source,draggableId } = args;
-    // onDragEnd 이벤트리스너의 args안에는 draggable요소의 id, destination, source 등의 정보가 들어있다.  #7.6
-
+  function onDragEnd(result:DropResult) {
+    console.log("onDragEnd result➡️ ",result)
+    const { destination,source } = result;
     if(!destination) return;
-    // draggable요소가 제자리에서 drag되면 destination이 null을 반환한다.  #7.6
-
-    if(destination.droppableId === source.droppableId){
-    // 같은 droppable요소 안에서 drag and drop이 발생했을때
-      setBoards((boards)=>{
-        const copyBoards = [...boards[destination.droppableId]] // boards[destination.droppableId] => boards['items'||'carrier'||'bag'] 
-        const taskObj = copyBoards[source.index]
-        console.log("copyBoards➡️ ", copyBoards)
-        copyBoards.splice(source.index,1)  // source는 drag전의 요소 정보
-        copyBoards.splice(destination.index,0,taskObj)  // destination은 drop후의 요소 정보
-        console.log("splice copyBoards➡️ ", copyBoards)
+    // onDragEnd 이벤트리스너는 result를 parameter로 갖고있으며, result는 DropResult타입이다.  #7.5
+    // result에는 draggableId, source(출발지), destination(도착지) 등이 들어있다.  #7.5
+    // onDragEnd 이벤트리스너의 result안에는 draggable요소의 id, destination, source 등의 정보가 들어있다.  #7.6
+    // draggable요소가 droppable 밖에서 drop되면 destination에 null을 반환한다.  #7.6
+    
+    if(destination.droppableId === source.droppableId){  // '준비물'board에서 '준비물'board로 drag and drop이 발생했을 때
+      setBoards((boards)=>{  // boards => { item:[{key1:value1},{key2:value2},{key3:value3}}], carrier:[{key4:value4}], bag:[{key5:value5}] }
+        const copyDestinationBoardItems = [...boards[destination.droppableId]]  // [{key1:value1},{key2:value2},{key3:value3}}]
+        const sourceItem = copyDestinationBoardItems[source.index]  // {key1:value1}
+        copyDestinationBoardItems.splice(source.index,1)  
+        copyDestinationBoardItems.splice(destination.index,0,sourceItem) 
+        // console.log("copyDestinationBoardItems➡️ ", copyDestinationBoardItems)
+        // console.log("sourceItem➡️ ", sourceItem)
         return {
-          ...boards,  // => { items:[...], carrier:[...], bag:[...]}  // {{ ... }}일때, 안쪽의 {}는 자동으로 벗겨진다.
-          [destination.droppableId]:copyBoards  // => 'items'||'carrier'||'bag' : copyCategory 
+          ...boards,
+          [destination.droppableId]:copyDestinationBoardItems 
         }
       })
-    }
-    if(destination.droppableId !== source.droppableId){
-    // 다른 droppable요소 안에서 drag and drop이 발생했을때
-    setBoards((boards)=>{
-      const sourceBoard = [...boards[source.droppableId]]  // boards[source.droppableId] => boards['items'||'carrier'||'bag'] 
-      const taskObj = sourceBoard[source.index]
-      const destinationBoard = [...boards[destination.droppableId]]  // boards[destination.droppableId] => boards['items'||'carrier'||'bag'] 
-      console.log('sourceBoard➡️ ',sourceBoard)
-      console.log('destinationBoard➡️ ',destinationBoard)
-      sourceBoard.splice(source.index,1)  // source는 drag전의 요소 정보
-      destinationBoard.splice(destination.index,0,taskObj)  // destination은 drop후의 요소 정보
-      console.log('splice sourceBoard➡️ ',sourceBoard)
-      console.log('splice destinationBoard➡️ ',destinationBoard)
-      return {
-        ...boards,  // => { items:[...], carrier:[...], bag:[...]}  // {{ ... }}일때, 안쪽의 {}는 자동으로 벗겨진다.
-        [source.droppableId]: sourceBoard,  // => 'items'||'carrier'||'bag' : sourceBoard
-        [destination.droppableId]: destinationBoard  // => 'items'||'carrier'||'bag' : destinationBoard
+    } else if(destination.droppableId !== source.droppableId){  // '준비물'board에서 '캐리어'board로 drag and drop이 발생했을 때
+      setBoards((boards)=>{  // boards => { item:[{key1:value1},{key2:value2},{key3:value3}}], carrier:[{key4:value4}], bag:[{key5:value5}] }
+        const sourceBoard = [...boards[source.droppableId]]  // [{key1:value1},{key2:value2},{key3:value3}}]
+        const destinationBoard = [...boards[destination.droppableId]]  // [{key4:value4}]
+        const sourceItem = sourceBoard[source.index]  // {key1:value1}
+        sourceBoard.splice(source.index,1)  
+        destinationBoard.splice(destination.index,0,sourceItem)
+        console.log('splice sourceBoard➡️ ',sourceBoard)
+        console.log('splice destinationBoard➡️ ',destinationBoard)
+        return {
+          ...boards,  
+          [source.droppableId]: sourceBoard, 
+          [destination.droppableId]: destinationBoard  
+        }
+      })
       }
-    })
-    }
-  }
+  } 
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper>
-        <Boards>
-          {Object.keys(boards).map((boardName,index)=>
+      <Container>
+        <Title>여행 체크리스트✈️</Title>
+        <BoardContainer>
+          {Object.keys(boards).map((boardName)=>
             <DroppableBoard key={boardName} boardId={boardName} items={ boards[boardName] } />
           )}
-        </Boards>
-      </Wrapper>
+        </BoardContainer>
+      </Container>
     </DragDropContext>
   )
 }
@@ -85,6 +89,5 @@ export default App;
 
 
 /*
-<DragDropContext> = onDragEnd 이벤트리스너를 필수로 작성.  #7.2
-                    onDragEnd 이벤트리스너는 DropResult 타입의 args를 parameter로 갖고있으며, args에는 draggable요소의 시작지점, 도착지점 등의 정보가 나와있다. (console.log(args))  #7.5
+<DragDropContext>는 onDragEnd 필수  #7.2
 */

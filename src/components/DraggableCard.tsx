@@ -19,7 +19,10 @@ function DraggableCard ({itemId,itemName,index}:ICard) {
   return (
     <Draggable draggableId={itemId+''} index={index}>
       {(provided,snapshot)=>(
-        <Card isDragging={snapshot.isDragging} ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps}>
+        <Card 
+          ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps} 
+          isDragging={snapshot.isDragging} 
+        >
           {itemName}
         </Card>
       )}
@@ -32,10 +35,9 @@ export default React.memo(DraggableCard)
 
 
 /*
-<Draggable> = draggableId, index 필수로 작성.  #7.2
-              자식요소는 함수안에 작성하고, 함수는 'provided','snapshot' parameter를 갖고있다.
-              provided.innerRef는 자식요소의 ref속성에 작성해야한다.
-              provided.draggableProps는 spread 문법으로 작성해야하고, 해당 요소는 drag가 가능한 요소가 된다.
-              provided.dragHandleProps는 spread 문법으로 작성해야하고, 해당 요소를 클릭해야 drag 무빙이 가능하다.  #7.3
-              snapshot.isDragging은 draggable요소가 드래깅 중인지 여부  #7.12
+20. <Draggable> = draggableId 필수  #7.2
+21. 자식요소는 함수안에 작성하고, 함수는 'provided','snapshot' parameter를 갖고있다.
+23. ref={provided.innerRef}{...provided.dragHandleProps}{...provided.draggableProps}는 요소를 draggable요소로 만들어준다.  #7.3
+    {...provided.dragHandleProps}는 해당요소를 drag를 위한 클릭범위로 지정한다.  #7.3
+24. snapshot.isDragging은 draggable요소가 드래깅 중인지 여부를 나타낸다.  #7.12
 */

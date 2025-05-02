@@ -7,3 +7,5 @@ declare module "styled-components" {
     cardColor:string,
   }
 }
+
+// theme 설정할 때 해당코드 복사해서 수정

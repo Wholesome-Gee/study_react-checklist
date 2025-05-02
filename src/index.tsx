@@ -65,3 +65,8 @@ root.render(
     </ThemeProvider>
   </RecoilRoot>
 );
+/*
+RecoilRoot = recoil 세팅
+ThemeProvider = theme 세팅 (styled.d.ts, theme.ts)
+CreateGlobalStyle = 전역 CSS
+*/
