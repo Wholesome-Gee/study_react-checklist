@@ -3,7 +3,8 @@ import DraggableCard from "./DraggableCard";
 import { Droppable } from "react-beautiful-dnd";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { IItem } from "../atoms";
+import { boardState, IItem } from "../atoms";
+import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   width: 300px;
@@ -53,11 +54,21 @@ interface IArea {
 }
 
 function DroppableBoard({items,boardId}:IDroppableBoard) {
+  const setItems = useSetRecoilState(boardState)
   const { register, setValue, handleSubmit } = useForm<IForm>()
-  const inputRef = useRef<HTMLInputElement>(null)  // useRef()는 특정 html 요소의 불필요한 재렌더링을 막아줌과 동시에 html 요소에 접근이 가능하다. 접근할 input에 ref={inputRef}  #7.13
+  // const inputRef = useRef<HTMLInputElement>(null)  // useRef()는 특정 html 요소의 불필요한 재렌더링을 막아줌과 동시에 html 요소에 접근이 가능하다. 접근할 input에 ref={inputRef}  #7.13
 
   function onValid(data:IForm) {
-    const { item } = data
+    const newItem = {
+      id: Date.now(),
+      name: data.item
+    }
+    setItems((allBoards)=>{
+      return {
+        ...allBoards,
+        [boardId]: [newItem, ...allBoards[boardId]]
+      }
+    })
     setValue('item',"")
   }
   // function onClick() {

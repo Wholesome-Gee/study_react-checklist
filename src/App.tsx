@@ -37,9 +37,10 @@ function App() {
     // 같은 droppable요소 안에서 drag and drop이 발생했을때
       setBoards((boards)=>{
         const copyBoards = [...boards[destination.droppableId]] // boards[destination.droppableId] => boards['items'||'carrier'||'bag'] 
+        const taskObj = copyBoards[source.index]
         console.log("copyBoards➡️ ", copyBoards)
         copyBoards.splice(source.index,1)  // source는 drag전의 요소 정보
-        copyBoards.splice(destination.index,0,draggableId)  // destination은 drop후의 요소 정보
+        copyBoards.splice(destination.index,0,taskObj)  // destination은 drop후의 요소 정보
         console.log("splice copyBoards➡️ ", copyBoards)
         return {
           ...boards,  // => { items:[...], carrier:[...], bag:[...]}  // {{ ... }}일때, 안쪽의 {}는 자동으로 벗겨진다.
@@ -51,11 +52,12 @@ function App() {
     // 다른 droppable요소 안에서 drag and drop이 발생했을때
     setBoards((boards)=>{
       const sourceBoard = [...boards[source.droppableId]]  // boards[source.droppableId] => boards['items'||'carrier'||'bag'] 
+      const taskObj = sourceBoard[source.index]
       const destinationBoard = [...boards[destination.droppableId]]  // boards[destination.droppableId] => boards['items'||'carrier'||'bag'] 
       console.log('sourceBoard➡️ ',sourceBoard)
       console.log('destinationBoard➡️ ',destinationBoard)
       sourceBoard.splice(source.index,1)  // source는 drag전의 요소 정보
-      destinationBoard.splice(destination.index,0,draggableId)  // destination은 drop후의 요소 정보
+      destinationBoard.splice(destination.index,0,taskObj)  // destination은 drop후의 요소 정보
       console.log('splice sourceBoard➡️ ',sourceBoard)
       console.log('splice destinationBoard➡️ ',destinationBoard)
       return {
