@@ -1,4 +1,7 @@
 import { atom } from "recoil";
+import { recoilPersist } from 'recoil-persist'  // npm i recoil-persist
+
+const { persistAtom } = recoilPersist()  // recoil-persist 세팅작업 1
 
 export interface IItem {
   id: number;
@@ -15,7 +18,8 @@ export const boardState = atom<IBoard>({
     핸드백:[],
     백팩:[],
     캐리어:[]
-  }
+  },
+  effects_UNSTABLE: [persistAtom],  // recoil-persist 세팅작업 2
 })
 /*
 App.tsx의 <DroppableBoard ... items={ boards[boardName] } /> boards[boardName]부분에서 type error가 뜬다.

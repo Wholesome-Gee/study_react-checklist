@@ -109,3 +109,9 @@ export const hoursSelector = selector<number>({
 **📗useRef()를 사용하여 특정 html요소에 대한 접근과 불필요한 재렌더링을 막기**
 
 ---
+
+### Code Challenge 1
+
+**📗recoil-persist를 사용하여 체크리스트를 localStorage에 저장하기**
+
+---
