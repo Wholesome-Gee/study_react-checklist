@@ -3,6 +3,8 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { boardState } from './atoms';
 import DroppableBoard from './components/DroppableBoard';
+import { Helmet } from 'react-helmet'
+
 
 const Container = styled.div`
   width: 100vw;
@@ -18,7 +20,7 @@ const Title = styled.h1`
   font-size: 36px;
   font-weight: 700;
   margin-bottom: 16px;
-  transform: translateY(-50px)
+  transform: translateY(-50px);
 `
 const BoardContainer = styled.div`
   display: grid;
@@ -73,16 +75,21 @@ function App() {
   } 
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Container>
-        <Title>여행 체크리스트✈️</Title>
-        <BoardContainer>
-          {Object.keys(boards).map((boardName)=>
-            <DroppableBoard key={boardName} boardId={boardName} items={ boards[boardName] } />
-          )}
-        </BoardContainer>
-      </Container>
-    </DragDropContext>
+    <>
+      <Helmet>
+        <title>여행 체크리스트✈️</title>
+      </Helmet>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Container>
+          <Title>여행 체크리스트✈️</Title>
+          <BoardContainer>
+            {Object.keys(boards).map((boardName)=>
+              <DroppableBoard key={boardName} boardId={boardName} items={ boards[boardName] } />
+            )}
+          </BoardContainer>
+        </Container>
+      </DragDropContext>
+    </>
   )
 }
 export default App;
