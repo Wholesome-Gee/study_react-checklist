@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/study_react-checklist/static/js/main.8dd24827.js",
+    "main.js": "/study_react-checklist/static/js/main.d992c07a.js",
     "index.html": "/study_react-checklist/index.html",
-    "main.8dd24827.js.map": "/study_react-checklist/static/js/main.8dd24827.js.map"
+    "main.d992c07a.js.map": "/study_react-checklist/static/js/main.d992c07a.js.map"
   },
   "entrypoints": [
-    "static/js/main.8dd24827.js"
+    "static/js/main.d992c07a.js"
   ]
 }
